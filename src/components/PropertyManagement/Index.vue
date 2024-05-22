@@ -11,7 +11,7 @@
           <el-col :span="9">
             <el-form-item prop="org_name">
               <el-input v-model="taskForm.org_name">
-                <template slot="prepend">单位信息</template>
+                <template slot="prepend">单位名称</template>
               </el-input>
             </el-form-item>
             
@@ -19,7 +19,7 @@
           <el-col :span="9">
             <el-form-item prop="ip">
               <el-input v-model="taskForm.ip">
-                <template slot="prepend">IP信息</template>
+                <template slot="prepend">IP地址</template>
               </el-input>
             </el-form-item>
             
@@ -37,30 +37,7 @@
         </el-row>
           <el-collapse-transition>
             <div v-show="isCollapse">
-              <el-row  class="collapse-transition">
-            <el-col :span="9">
-              <el-form-item prop="record_num">
-                <el-input v-model="taskForm.record_num">
-                  <template slot="prepend">备案号</template>
-                </el-input>
-              </el-form-item>              
-            </el-col>
-          <el-col :span="9">
-            <el-form-item prop="cloud_server">
-                <el-input v-model="taskForm.cloud_server">
-                  <template slot="prepend">云厂商信息</template>
-                </el-input>
-              </el-form-item>
-          </el-col>
-          </el-row>
           <el-row  class="collapse-transition">
-            <el-col :span="9">
-            <el-form-item prop="server">
-              <el-input v-model="taskForm.server">
-                <template slot="prepend">资产服务类型</template>
-              </el-input>
-            </el-form-item>
-          </el-col>
           <el-col :span="9">
             <el-form-item prop="region">
               <el-input v-model="taskForm.region">
@@ -68,21 +45,47 @@
               </el-input>
             </el-form-item>
           </el-col>
-          </el-row>
-        <el-row  class="collapse-transition">
-          
           <el-col :span="9">
             <el-form-item prop="org_type">
-              <el-input v-model="taskForm.org_type">
-                <template slot="prepend">单位类型</template>
-              </el-input>
+              <div class="el-input-group__prepend" style="display: inline-block;transform: translateY(-1px);">单位类型</div>
+              <el-select v-model="taskForm.org_type" clearable>
+                <el-option
+                v-for="item in orgtypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                >
+                </el-option>
+              </el-select>
+              
+            </el-form-item>
+          </el-col>
+          </el-row>
+        <el-row  class="collapse-transition">
+
+          <el-col :span="9">
+            <el-form-item prop="industry">
+              <div class="el-input-group__prepend" style="display: inline-block;transform: translateY(-1px);">单位行业</div>
+              <el-select v-model="taskForm.industry" clearable>
+                <el-option
+                v-for="item in industryOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                >
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="9">
-            <el-form-item prop="industry">
-              <el-input v-model="taskForm.industry">
-                <template slot="prepend">单位行业</template>
-              </el-input>
+            <el-form-item label="创建时间" prop="taskTime">
+              <el-date-picker v-model="taskForm.start_create_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" width="10vw"
+                value-format="yyyy-MM-dd HH:mm:ss" placement="bottom-start" placeholder="开始时间" class="input-time">
+              </el-date-picker>
+              <span class="split">至</span>
+              <el-date-picker v-model="taskForm.end_create_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" width="10vw"
+                value-format="yyyy-MM-dd HH:mm:ss" placement="bottom-start" placeholder="结束时间" class="input-time">
+              </el-date-picker>
             </el-form-item>
           </el-col>
           </el-row>
@@ -110,14 +113,15 @@
           </el-col>
         </el-row> -->
         <el-row  class="collapse-transition">
+          
           <el-col :span="9">
-            <el-form-item label="选择时间" prop="taskTime">
-              <el-date-picker v-model="taskForm.start_created_time" type="date" format="yyyy-MM-dd" width="10vw"
-                value-format="yyyy-MM-dd" placement="bottom-start" placeholder="开始时间" class="input-time">
+            <el-form-item label="更新时间" prop="taskTime">
+              <el-date-picker v-model="taskForm.start_update_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" width="10vw"
+                value-format="yyyy-MM-dd HH:mm:ss" placement="bottom-start" placeholder="开始时间" class="input-time">
               </el-date-picker>
               <span class="split">至</span>
-              <el-date-picker v-model="taskForm.end_created_time" type="date" format="yyyy-MM-dd" width="10vw"
-                value-format="yyyy-MM-dd" placement="bottom-start" placeholder="结束时间" class="input-time">
+              <el-date-picker v-model="taskForm.end_update_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" width="10vw"
+                value-format="yyyy-MM-dd HH:mm:ss" placement="bottom-start" placeholder="结束时间" class="input-time">
               </el-date-picker>
             </el-form-item>
           </el-col>
@@ -148,24 +152,26 @@
                     )" ref="taskTable" -->
           <el-table-column type="selection" width="25" fixed="left"> </el-table-column>
           <el-table-column prop="id" label="序号" width="70" fixed="left"></el-table-column>
-           <el-table-column prop="ip" label="IP地址" :show-overflow-tooltip="true" :width="flexWidth('ip', tableData, 'IP地址')"></el-table-column>
           <el-table-column prop="org_name" label="单位名称" :show-overflow-tooltip="true" :width="flexWidth('org_name', tableData, '单位名称')"></el-table-column>
-          <el-table-column prop="domain" label="域名地址" :show-overflow-tooltip="true" :width="flexWidth('domain', tableData, '域名地址')"></el-table-column>   
+          <el-table-column prop="domain" label="域名" :show-overflow-tooltip="true" :width="flexWidth('domain', tableData, '域名')"></el-table-column>
+           <el-table-column prop="ip" label="IP地址" :show-overflow-tooltip="true" :width="flexWidth('ip', tableData, 'IP地址')"></el-table-column>
           <el-table-column prop="port" label="端口" :show-overflow-tooltip="true" :width="flexWidth('port', tableData, '端口')"></el-table-column>     
-          <el-table-column prop="created" label="创建时间" :show-overflow-tooltip="true" :width="flexWidth('created', tableData, '系统绑定IP数')">
+          <el-table-column prop="org_type" label="单位类型" :show-overflow-tooltip="true" :width="flexWidth('org_type', tableData, '单位类型')"></el-table-column>
+          <el-table-column prop="org_industry" label="单位行业" :show-overflow-tooltip="true" :width="flexWidth('industry', tableData, '单位行业')"></el-table-column> 
+          <el-table-column prop="created" label="创建时间" :show-overflow-tooltip="true" :width="flexWidth('created', tableData, '创建时间')">
             <template slot-scope="scope">
               <div>
-                {{ dayjs(scope.row.created).format("YYYY-MM-DD hh:mm:ss") }}
+                {{ dayjs(scope.row.created).format("YYYY-MM-DD HH:mm:ss") }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="update" label="更新时间" :show-overflow-tooltip="true" :width="170">
+          <!-- <el-table-column prop="updated" label="更新时间" :show-overflow-tooltip="true" :width="170">
             <template slot-scope="scope">
               <div>
-                {{ dayjs(scope.row.update).format("YYYY-MM-DD hh:mm:ss") }}
+                {{ dayjs(scope.row.updated).format("YYYY-MM-DD HH:mm:ss") }}
               </div>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <!-- <el-table-column type="index" label="序号" width="45" fixed="left"></el-table-column>
           <el-table-column prop="dwmc" label="单位名称" :show-overflow-tooltip="true" :width="200"></el-table-column>
           <el-table-column prop="IP" label="IP" :show-overflow-tooltip="true" :width="flexWidth('IP', tableData, 'IP')"></el-table-column>          
@@ -199,11 +205,47 @@ export default {
   name: "PropertyManagement",
   data() {
     return {
+      industryOptions:[{key:"农、林、牧、渔业",value:"农、林、牧、渔业"},
+      {key:"采矿业",value:"采矿业"},
+      {key:"制造业",value:"制造业"},
+      {key:"电力、燃气及水的生产和供应业",value:"电力、燃气及水的生产和供应业"},
+      {key:"建筑业",value:"建筑业"},
+      {key:"交通运输、仓储和邮政业",value:"交通运输、仓储和邮政业"},
+      {key:"信息传输、计算机服务和软件业",value:"信息传输、计算机服务和软件业"},
+      {key:"批发和零售业",value:"批发和零售业"},
+       {key:"住宿和餐饮业",value:"住宿和餐饮业"},
+       {key:"金融业",value:"金融业"},
+       {key:"房地产业",value:"房地产业"},
+       {key:"租赁和商务服务业",value:"租赁和商务服务业"},
+       {key:"科学研究、技术服务和地质勘查业",value:"科学研究、技术服务和地质勘查业"},
+       {key:"水利、环境和公共设施管理业",value:"水利、环境和公共设施管理业"},
+       {key:"居民服务和其他服务业",value:"居民服务和其他服务业"},
+      {key:"教育",value:"教育"},
+      {key:"卫生、社会保障和社会福利业",value:"卫生、社会保障和社会福利业"},
+      {key:"文化、体育和娱乐业",value:"文化、体育和娱乐业"},
+      {key:"公共管理与社会组织",value:"公共管理与社会组织"},
+      {key:"国际组织",value:"国际组织"},],
+      orgtypeOptions:[{key:"国防机构",value:"国防机构"},
+      {key:"政府机关",value:"政府机关"},
+      {key:"事业单位",value:"事业单位"},
+      {key:"企业",value:"企业"},
+      {key:"个人",value:"个人"},
+      {key:"社会团体",value:"社会团体"},
+      {key:"民办非企业单位",value:"民办非企业单位"},
+      {key:"基金会",value:"基金会"},
+      {key:"律师执业机构",value:"律师执业机构"},
+      {key:"外国在华文化中心",value:"外国在华文化中心"},
+      {key:"群众性团体组织",value:"群众性团体组织"},
+      {key:"司法鉴定机构",value:"司法鉴定机构"},
+      {key:"宗教团体",value:"宗教团体"},
+      {key:"外国机构",value:"外国机构"}],
       dayjs: dayjs,
       isCollapse: false,
       taskForm: {
-        start_created_time: "",
-        end_created_time: "",
+        start_create_time: "",
+        end_create_time: "",
+        start_update_time: "",
+        end_update_time: "",
         cloud_server:"",
         server:"",
         region:"",
@@ -290,13 +332,19 @@ export default {
     },
     // 查询接口
     async tasklist(){
+      console.log(this.taskForm.start_create_time);
+      console.log(this.taskForm.end_create_time);
+      console.log(this.taskForm.start_update_time);
+      console.log(this.taskForm.end_update_time);
       const { data: res } = await this.$http.get(
         "/ip-org-list",
         {params: {
             pageNum: this.currentPage,
             pageSize: this.pageSize,
-            start_created_time: this.taskForm.start_created_time,
-            end_created_time: this.taskForm.end_created_time,
+            start_create_time: this.taskForm.start_create_time,
+            end_create_time: this.taskForm.end_create_time,
+            start_update_time: this.taskForm.start_update_time,
+            end_update_time: this.taskForm.end_update_time,
             cloud_server:this.taskForm.cloud_server,
             server:this.taskForm.server,
             region:this.taskForm.region,

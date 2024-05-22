@@ -14,9 +14,12 @@ module.exports = {
         // target:'https://10.8.0.105:8443', 
         // target:'http://10.8.0.5:8080',   //zx   admin   123446
         // target: 'http://10.8.0.5:8080',
-        // target:'http://172.26.1.36:80', // 峰哥接口
+        // target:'http://192.168.137.78:80', // 峰哥接口
         // target: 'http://192.168.20.41:8805',
-        target:'http://localhost:8082',
+        // target:'http://localhost:8082',
+        target:'http://172.26.1.36:80', // 峰哥接口
+        // target:'http://8.147.137.100:80',
+        // target:'http://172.17.96.1:80',
         ws: true,
         changeOrigin: true,
         secure: false, // 如果是https接口，需要配置这个参数

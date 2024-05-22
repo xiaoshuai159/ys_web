@@ -183,6 +183,11 @@ const routes = [
         name: 'ycjc',
         component: () => import('../components/zhManagement/ycjc.vue')
     },
+    {
+        path: '/zhManagement/ycjcxq',
+        name: 'ycjcxq',
+        component: () => import('../components/zhManagement/ycjcxq.vue')
+    },
     // {
     //   path: '/task_management/result_query',
     //   name: 'ResultQuery',

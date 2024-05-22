@@ -61,7 +61,7 @@
       methods: {
         submitLogin() {
           // 假数据， 不走接口，前端自己玩
-          if(this.loginForm.login_user == 'admin' && this.loginForm.login_passwd == '123456'){
+          if(this.loginForm.login_user == 'admin' && this.loginForm.login_passwd == 'yunshangfuwuzichan'){
              this.$router.push({name:'PropertyManagement'})
           }else{
             this.$message.error('账号密码错误！')
